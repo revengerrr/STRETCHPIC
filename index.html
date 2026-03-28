@@ -169,20 +169,27 @@
   }
   .result-scroll img{display:block;width:100%}
 
-  /* Download */
-  .download-wrap{margin-top:22px;text-align:center}
-  .btn-download{
+  /* Download & Reset */
+  .download-wrap{margin-top:22px;text-align:center;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .btn-download,.btn-reset{
     display:inline-flex;align-items:center;gap:10px;
-    background:linear-gradient(135deg,var(--ocean1),var(--ocean2));
-    color:#fff;border:none;border-radius:100px;
+    border:none;border-radius:100px;
     padding:13px 34px;font-family:'Outfit',sans-serif;font-weight:700;
     font-size:15px;cursor:pointer;letter-spacing:0.01em;
     transition:transform .2s,box-shadow .2s;
-    box-shadow:0 4px 20px rgba(0,102,179,.25);
+  }
+  .btn-download{
+    background:linear-gradient(135deg,var(--ocean1),var(--ocean2));
+    color:#fff;box-shadow:0 4px 20px rgba(0,102,179,.25);
   }
   .btn-download:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,102,179,.35)}
-  .btn-download:active{transform:translateY(0)}
-  .btn-download svg{width:17px;height:17px}
+  .btn-reset{
+    background:var(--surface);color:var(--muted);
+    border:1px solid var(--border);box-shadow:var(--shadow);
+  }
+  .btn-reset:hover{color:var(--ocean2);border-color:var(--ocean1);transform:translateY(-2px)}
+  .btn-download:active,.btn-reset:active{transform:translateY(0)}
+  .btn-download svg,.btn-reset svg{width:17px;height:17px}
 
   /* Processing */
   .processing{text-align:center;padding:36px;color:var(--muted);font-size:13px;display:none}
@@ -371,6 +378,13 @@
         </svg>
         Download
       </button>
+      <button class="btn-reset" id="btnReset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 105.64-11.36L1 10"/>
+        </svg>
+        New Image
+      </button>
     </div>
   </div>
 
@@ -512,6 +526,23 @@ btnDownload.addEventListener('click', () => {
   a.click();
   URL.revokeObjectURL(a.href);
   showToast('Downloaded!');
+});
+
+// Reset
+document.getElementById('btnReset').addEventListener('click', () => {
+  loadedImage = null;
+  resultBlob = null;
+  currentFileName = 'stretched';
+  fileInput.value = '';
+  origPreview.src = '';
+  resultPreview.src = '';
+  previewSection.classList.remove('visible');
+  processing.classList.remove('visible');
+  outW.value = 500;
+  outH.value = 5000;
+  formatSelect.selectedIndex = 0;
+  showToast('Ready for a new image!');
+  dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
 // Copy donation address
