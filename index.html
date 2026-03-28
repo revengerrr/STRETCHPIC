@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRETCHPIC — 1:10 Ratio Image Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#f4f8fb;
+    --surface:#ffffff;
+    --border:#d4e3f0;
+    --accent:#0077cc;
+    --accent-light:#e6f2ff;
+    --accent-hover:#005fa3;
+    --ocean1:#0099e6;
+    --ocean2:#0066b3;
+    --ocean3:#004d80;
+    --text:#1a2b3c;
+    --muted:#6b8299;
+    --success:#00a86b;
+    --shadow:0 2px 12px rgba(0,80,160,.08);
+    --shadow-lg:0 8px 32px rgba(0,80,160,.12);
+  }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    min-height:100vh;
+  }
+
+  /* Top bar accent */
+  .topbar{
+    height:4px;
+    background:linear-gradient(90deg,var(--ocean1),var(--ocean2),var(--ocean3));
+  }
+
+  .container{
+    max-width:680px;margin:0 auto;padding:36px 20px 80px;
+  }
+
+  /* Header */
+  header{text-align:center;margin-bottom:40px}
+  .logo{
+    font-family:'Outfit',sans-serif;font-weight:800;
+    font-size:clamp(2rem,7vw,3.2rem);
+    letter-spacing:-0.03em;line-height:1;
+    color:var(--ocean2);
+  }
+  .logo span{
+    color:var(--ocean1);
+  }
+  .tagline{
+    font-size:14px;color:var(--muted);margin-top:8px;font-weight:400;
+  }
+  .ratio-badge{
+    display:inline-block;margin-top:14px;
+    padding:5px 14px;
+    background:var(--accent-light);
+    color:var(--accent);
+    border-radius:100px;
+    font-size:12px;font-weight:600;letter-spacing:0.02em;
+  }
+
+  /* Drop Zone */
+  .dropzone{
+    border:2px dashed var(--border);border-radius:20px;
+    padding:52px 24px;text-align:center;cursor:pointer;
+    transition:all .25s ease;position:relative;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+  }
+  .dropzone:hover{
+    border-color:var(--ocean1);background:#f0f7ff;
+    box-shadow:var(--shadow-lg);
+  }
+  .dropzone.dragover{
+    border-color:var(--ocean1);background:#e6f2ff;
+    transform:scale(1.005);
+  }
+  .dropzone-icon{
+    width:52px;height:52px;margin:0 auto 14px;
+    background:var(--accent-light);
+    border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .25s;
+  }
+  .dropzone:hover .dropzone-icon{background:#cce5ff}
+  .dropzone-icon svg{width:22px;height:22px;stroke:var(--accent)}
+  .dropzone-text{font-size:14px;color:var(--muted);line-height:1.7}
+  .dropzone-text strong{color:var(--text);display:block;margin-bottom:2px;font-size:15px;font-weight:600}
+  .file-input{display:none}
+
+  /* Options */
+  .options{
+    display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;
+  }
+  .option-group{
+    flex:1;min-width:170px;background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);
+  }
+  .option-group label{
+    font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--muted);display:block;margin-bottom:8px;font-weight:600;
+  }
+  .size-inputs{display:flex;gap:8px;align-items:center}
+  .size-inputs input{
+    width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;
+    color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+    padding:8px 12px;text-align:center;outline:none;transition:border-color .2s;
+  }
+  .size-inputs input:focus{border-color:var(--ocean1);box-shadow:0 0 0 3px rgba(0,153,230,.12)}
+  .size-inputs span{color:var(--muted);font-size:13px;flex-shrink:0;font-weight:600}
+
+  select{
+    width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;
+    color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+    padding:8px 12px;outline:none;cursor:pointer;
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b8299'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  select:focus{border-color:var(--ocean1);box-shadow:0 0 0 3px rgba(0,153,230,.12)}
+
+  /* Preview */
+  .preview-section{margin-top:28px;display:none}
+  .preview-section.visible{display:block;animation:fadeUp .4s ease}
+  .preview-header{
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;
+  }
+  .preview-label{
+    font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--muted);font-weight:600;
+  }
+  .original-info{font-size:12px;color:var(--muted)}
+  .original-info span{color:var(--accent);font-weight:600}
+
+  .preview-split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.preview-split{grid-template-columns:1fr}}
+
+  .preview-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:12px;box-shadow:var(--shadow);overflow:hidden;
+  }
+  .preview-card-label{
+    font-size:10px;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--muted);font-weight:600;
+    margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;
+  }
+  .preview-card-label span:last-child{color:var(--accent);font-size:11px}
+  .preview-img-wrap{
+    border-radius:10px;overflow:hidden;
+    background:
+      repeating-conic-gradient(#eef3f8 0% 25%, #fff 0% 50%) 0 0/14px 14px;
+    display:flex;align-items:center;justify-content:center;
+    max-height:380px;
+  }
+  .preview-img-wrap img{display:block;max-width:100%;max-height:380px;object-fit:contain}
+
+  .result-scroll{
+    border-radius:10px;overflow:auto;max-height:480px;
+    background:repeating-conic-gradient(#eef3f8 0% 25%, #fff 0% 50%) 0 0/14px 14px;
+  }
+  .result-scroll img{display:block;width:100%}
+
+  /* Download */
+  .download-wrap{margin-top:22px;text-align:center}
+  .btn-download{
+    display:inline-flex;align-items:center;gap:10px;
+    background:linear-gradient(135deg,var(--ocean1),var(--ocean2));
+    color:#fff;border:none;border-radius:100px;
+    padding:13px 34px;font-family:'Outfit',sans-serif;font-weight:700;
+    font-size:15px;cursor:pointer;letter-spacing:0.01em;
+    transition:transform .2s,box-shadow .2s;
+    box-shadow:0 4px 20px rgba(0,102,179,.25);
+  }
+  .btn-download:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 32px rgba(0,102,179,.35);
+  }
+  .btn-download:active{transform:translateY(0)}
+  .btn-download svg{width:17px;height:17px}
+
+  /* Processing */
+  .processing{text-align:center;padding:36px;color:var(--muted);font-size:13px;display:none}
+  .processing.visible{display:block}
+  .processing .spinner{
+    width:28px;height:28px;border:2.5px solid var(--border);
+    border-top-color:var(--ocean1);border-radius:50%;
+    animation:spin .7s linear infinite;margin:0 auto 14px;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Footer */
+  footer{
+    text-align:center;margin-top:44px;padding-top:20px;
+    border-top:1px solid var(--border);
+    font-size:12px;color:var(--muted);
+  }
+  footer a{color:var(--accent);text-decoration:none}
+
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(16px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .fade-up{animation:fadeUp .45s ease forwards;opacity:0}
+  .fade-up:nth-child(1){animation-delay:0s}
+  .fade-up:nth-child(2){animation-delay:.08s}
+  .fade-up:nth-child(3){animation-delay:.14s}
+
+  /* Toast */
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--success);color:#fff;font-family:'DM Sans',sans-serif;
+    font-size:13px;font-weight:600;padding:10px 24px;border-radius:100px;
+    transition:transform .3s ease;z-index:10000;pointer-events:none;
+    box-shadow:0 4px 16px rgba(0,168,107,.3);
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<div class="container">
+  <header class="fade-up">
+    <div class="logo">STRETCH<span>PIC</span></div>
+    <div class="tagline">Stretch any image to 1:10 ratio for Twitter/X</div>
+    <div class="ratio-badge">500 × 5000 px</div>
+  </header>
+
+  <div class="dropzone fade-up" id="dropzone">
+    <div class="dropzone-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </div>
+    <div class="dropzone-text">
+      <strong>Drop your image here</strong>
+      or click to browse — PNG, JPG, WebP
+    </div>
+    <input type="file" class="file-input" id="fileInput" accept="image/*">
+  </div>
+
+  <div class="options fade-up">
+    <div class="option-group">
+      <label>Output Size (px)</label>
+      <div class="size-inputs">
+        <input type="number" id="outW" value="500" min="1" max="10000">
+        <span>×</span>
+        <input type="number" id="outH" value="5000" min="1" max="20000">
+      </div>
+    </div>
+    <div class="option-group">
+      <label>Format</label>
+      <select id="formatSelect">
+        <option value="image/png">PNG</option>
+        <option value="image/jpeg">JPEG (smaller)</option>
+        <option value="image/webp">WebP</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="processing" id="processing">
+    <div class="spinner"></div>
+    Stretching your image...
+  </div>
+
+  <div class="preview-section" id="previewSection">
+    <div class="preview-header">
+      <span class="preview-label">Preview</span>
+      <span class="original-info" id="origInfo"></span>
+    </div>
+
+    <div class="preview-split">
+      <div class="preview-card">
+        <div class="preview-card-label">
+          <span>Original</span>
+          <span id="origDim"></span>
+        </div>
+        <div class="preview-img-wrap">
+          <img id="origPreview" alt="Original">
+        </div>
+      </div>
+
+      <div class="preview-card">
+        <div class="preview-card-label">
+          <span>Stretched</span>
+          <span id="resDim"></span>
+        </div>
+        <div class="result-scroll">
+          <img id="resultPreview" alt="Stretched result">
+        </div>
+      </div>
+    </div>
+
+    <div class="download-wrap">
+      <button class="btn-download" id="btnDownload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    100% in your browser — nothing uploaded, nothing stored
+  </footer>
+</div>
+
+<div class="toast" id="toast">Done!</div>
+
+<script>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const processing = document.getElementById('processing');
+const previewSection = document.getElementById('previewSection');
+const origPreview = document.getElementById('origPreview');
+const resultPreview = document.getElementById('resultPreview');
+const origDim = document.getElementById('origDim');
+const resDim = document.getElementById('resDim');
+const origInfo = document.getElementById('origInfo');
+const btnDownload = document.getElementById('btnDownload');
+const outW = document.getElementById('outW');
+const outH = document.getElementById('outH');
+const formatSelect = document.getElementById('formatSelect');
+
+let resultBlob = null;
+let currentFileName = 'stretched';
+let loadedImage = null;
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault(); dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+
+outW.addEventListener('change', reprocess);
+outH.addEventListener('change', reprocess);
+formatSelect.addEventListener('change', reprocess);
+
+function reprocess() { if (loadedImage) processImage(loadedImage); }
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) { showToast('Not an image file!'); return; }
+  currentFileName = file.name.replace(/\.[^.]+$/, '');
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => { loadedImage = img; processImage(img); };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function processImage(img) {
+  previewSection.classList.remove('visible');
+  processing.classList.add('visible');
+  origPreview.src = img.src;
+  origDim.textContent = `${img.naturalWidth} × ${img.naturalHeight}`;
+
+  const targetW = parseInt(outW.value) || 500;
+  const targetH = parseInt(outH.value) || 5000;
+  const format = formatSelect.value;
+
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext('2d');
+      // Stretch / distort — full image mapped to new dimensions
+      ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, targetW, targetH);
+
+      const quality = format === 'image/jpeg' ? 0.92 : undefined;
+      canvas.toBlob((blob) => {
+        resultBlob = blob;
+        resultPreview.src = URL.createObjectURL(blob);
+        resDim.textContent = `${targetW} × ${targetH}`;
+        origInfo.innerHTML = `<span>${img.naturalWidth}×${img.naturalHeight}</span> → <span>${targetW}×${targetH}</span>`;
+        processing.classList.remove('visible');
+        previewSection.classList.add('visible');
+        showToast('Stretched!');
+      }, format, quality);
+    }, 80);
+  });
+}
+
+btnDownload.addEventListener('click', () => {
+  if (!resultBlob) return;
+  const ext = formatSelect.value === 'image/png' ? 'png' : formatSelect.value === 'image/jpeg' ? 'jpg' : 'webp';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(resultBlob);
+  a.download = `${currentFileName}_${outW.value}x${outH.value}.${ext}`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('Downloaded!');
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
