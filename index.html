@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STRETCHPIC — 1:10 Ratio Image Tool</title>
+<title>STRETCHPIC — 1:10 Ratio Image Tool for X/Twitter</title>
+<meta name="description" content="Stretch any image to the viral 1:10 ratio (500×5000px) for Twitter/X. Free, private, no upload.">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -30,7 +31,6 @@
     min-height:100vh;
   }
 
-  /* Top bar accent */
   .topbar{
     height:4px;
     background:linear-gradient(90deg,var(--ocean1),var(--ocean2),var(--ocean3));
@@ -40,6 +40,22 @@
     max-width:680px;margin:0 auto;padding:36px 20px 80px;
   }
 
+  /* Social links top right */
+  .social-bar{
+    display:flex;justify-content:center;gap:12px;margin-bottom:24px;
+  }
+  .social-link{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 14px;border-radius:100px;
+    font-size:12px;font-weight:600;text-decoration:none;
+    transition:all .2s ease;
+    border:1px solid var(--border);color:var(--text);background:var(--surface);
+  }
+  .social-link:hover{
+    border-color:var(--ocean1);color:var(--ocean2);background:var(--accent-light);
+  }
+  .social-link svg{width:14px;height:14px;flex-shrink:0}
+
   /* Header */
   header{text-align:center;margin-bottom:40px}
   .logo{
@@ -48,17 +64,14 @@
     letter-spacing:-0.03em;line-height:1;
     color:var(--ocean2);
   }
-  .logo span{
-    color:var(--ocean1);
-  }
+  .logo span{color:var(--ocean1)}
   .tagline{
     font-size:14px;color:var(--muted);margin-top:8px;font-weight:400;
   }
   .ratio-badge{
     display:inline-block;margin-top:14px;
     padding:5px 14px;
-    background:var(--accent-light);
-    color:var(--accent);
+    background:var(--accent-light);color:var(--accent);
     border-radius:100px;
     font-size:12px;font-weight:600;letter-spacing:0.02em;
   }
@@ -67,22 +80,18 @@
   .dropzone{
     border:2px dashed var(--border);border-radius:20px;
     padding:52px 24px;text-align:center;cursor:pointer;
-    transition:all .25s ease;position:relative;
-    background:var(--surface);
-    box-shadow:var(--shadow);
+    transition:all .25s ease;
+    background:var(--surface);box-shadow:var(--shadow);
   }
   .dropzone:hover{
-    border-color:var(--ocean1);background:#f0f7ff;
-    box-shadow:var(--shadow-lg);
+    border-color:var(--ocean1);background:#f0f7ff;box-shadow:var(--shadow-lg);
   }
   .dropzone.dragover{
-    border-color:var(--ocean1);background:#e6f2ff;
-    transform:scale(1.005);
+    border-color:var(--ocean1);background:#e6f2ff;transform:scale(1.005);
   }
   .dropzone-icon{
     width:52px;height:52px;margin:0 auto 14px;
-    background:var(--accent-light);
-    border-radius:14px;
+    background:var(--accent-light);border-radius:14px;
     display:flex;align-items:center;justify-content:center;
     transition:background .25s;
   }
@@ -93,13 +102,11 @@
   .file-input{display:none}
 
   /* Options */
-  .options{
-    display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;
-  }
+  .options{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
   .option-group{
     flex:1;min-width:170px;background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);
+    border:1px solid var(--border);border-radius:14px;
+    padding:14px 16px;box-shadow:var(--shadow);
   }
   .option-group label{
     font-size:11px;text-transform:uppercase;letter-spacing:0.08em;
@@ -109,7 +116,7 @@
   .size-inputs input{
     width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;
     color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
-    padding:8px 12px;text-align:center;outline:none;transition:border-color .2s;
+    padding:8px 12px;text-align:center;outline:none;transition:all .2s;
   }
   .size-inputs input:focus{border-color:var(--ocean1);box-shadow:0 0 0 3px rgba(0,153,230,.12)}
   .size-inputs span{color:var(--muted);font-size:13px;flex-shrink:0;font-weight:600}
@@ -117,8 +124,7 @@
   select{
     width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;
     color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
-    padding:8px 12px;outline:none;cursor:pointer;
-    appearance:none;
+    padding:8px 12px;outline:none;cursor:pointer;appearance:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b8299'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 12px center;
   }
@@ -152,10 +158,8 @@
   .preview-card-label span:last-child{color:var(--accent);font-size:11px}
   .preview-img-wrap{
     border-radius:10px;overflow:hidden;
-    background:
-      repeating-conic-gradient(#eef3f8 0% 25%, #fff 0% 50%) 0 0/14px 14px;
-    display:flex;align-items:center;justify-content:center;
-    max-height:380px;
+    background:repeating-conic-gradient(#eef3f8 0% 25%, #fff 0% 50%) 0 0/14px 14px;
+    display:flex;align-items:center;justify-content:center;max-height:380px;
   }
   .preview-img-wrap img{display:block;max-width:100%;max-height:380px;object-fit:contain}
 
@@ -176,10 +180,7 @@
     transition:transform .2s,box-shadow .2s;
     box-shadow:0 4px 20px rgba(0,102,179,.25);
   }
-  .btn-download:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 32px rgba(0,102,179,.35);
-  }
+  .btn-download:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,102,179,.35)}
   .btn-download:active{transform:translateY(0)}
   .btn-download svg{width:17px;height:17px}
 
@@ -193,13 +194,66 @@
   }
   @keyframes spin{to{transform:rotate(360deg)}}
 
+  /* Donation Section */
+  .donate-section{
+    margin-top:40px;background:var(--surface);border:1px solid var(--border);
+    border-radius:20px;padding:28px 24px;box-shadow:var(--shadow);
+  }
+  .donate-header{
+    text-align:center;margin-bottom:20px;
+  }
+  .donate-header h3{
+    font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;
+    color:var(--text);margin-bottom:4px;
+  }
+  .donate-header p{font-size:13px;color:var(--muted)}
+  .donate-grid{display:flex;flex-direction:column;gap:10px}
+  .donate-row{
+    display:flex;align-items:center;gap:12px;
+    background:var(--bg);border:1px solid var(--border);border-radius:12px;
+    padding:12px 14px;transition:border-color .2s;cursor:pointer;
+  }
+  .donate-row:hover{border-color:var(--ocean1)}
+  .donate-icon{
+    width:36px;height:36px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;color:#fff;flex-shrink:0;
+  }
+  .donate-icon.btc{background:#f7931a}
+  .donate-icon.eth{background:#627eea}
+  .donate-icon.sol{background:linear-gradient(135deg,#9945ff,#14f195)}
+  .donate-info{flex:1;min-width:0}
+  .donate-info .chain{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+  .donate-info .addr{
+    font-size:11px;color:var(--text);font-family:'DM Sans',monospace;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    margin-top:2px;
+  }
+  .copy-btn{
+    background:var(--accent-light);border:none;border-radius:8px;
+    padding:6px 12px;font-size:11px;font-weight:600;color:var(--accent);
+    cursor:pointer;transition:all .2s;flex-shrink:0;
+    font-family:'DM Sans',sans-serif;
+  }
+  .copy-btn:hover{background:#cce5ff}
+  .copy-btn.copied{background:var(--success);color:#fff}
+
   /* Footer */
   footer{
-    text-align:center;margin-top:44px;padding-top:20px;
+    text-align:center;margin-top:32px;padding-top:20px;
     border-top:1px solid var(--border);
-    font-size:12px;color:var(--muted);
   }
-  footer a{color:var(--accent);text-decoration:none}
+  .footer-links{
+    display:flex;justify-content:center;gap:16px;margin-bottom:12px;
+  }
+  .footer-links a{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:12px;color:var(--muted);text-decoration:none;
+    transition:color .2s;
+  }
+  .footer-links a:hover{color:var(--ocean2)}
+  .footer-links a svg{width:14px;height:14px}
+  .footer-note{font-size:11px;color:var(--muted)}
 
   @keyframes fadeUp{
     from{opacity:0;transform:translateY(16px)}
@@ -210,7 +264,6 @@
   .fade-up:nth-child(2){animation-delay:.08s}
   .fade-up:nth-child(3){animation-delay:.14s}
 
-  /* Toast */
   .toast{
     position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
     background:var(--success);color:#fff;font-family:'DM Sans',sans-serif;
@@ -226,9 +279,22 @@
 <div class="topbar"></div>
 
 <div class="container">
+
+  <!-- Social Links -->
+  <div class="social-bar fade-up">
+    <a href="https://x.com/revengerlabs" target="_blank" class="social-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      @revengerlabs
+    </a>
+    <a href="https://github.com/revengerrr" target="_blank" class="social-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      revengerrr
+    </a>
+  </div>
+
   <header class="fade-up">
     <div class="logo">STRETCH<span>PIC</span></div>
-    <div class="tagline">Stretch any image to 1:10 ratio for Twitter/X</div>
+    <div class="tagline">Stretching your pic to the newest X pic new setting</div>
     <div class="ratio-badge">500 × 5000 px</div>
   </header>
 
@@ -276,7 +342,6 @@
       <span class="preview-label">Preview</span>
       <span class="original-info" id="origInfo"></span>
     </div>
-
     <div class="preview-split">
       <div class="preview-card">
         <div class="preview-card-label">
@@ -287,7 +352,6 @@
           <img id="origPreview" alt="Original">
         </div>
       </div>
-
       <div class="preview-card">
         <div class="preview-card-label">
           <span>Stretched</span>
@@ -298,7 +362,6 @@
         </div>
       </div>
     </div>
-
     <div class="download-wrap">
       <button class="btn-download" id="btnDownload">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -311,8 +374,52 @@
     </div>
   </div>
 
+  <!-- Donate Section -->
+  <div class="donate-section fade-up">
+    <div class="donate-header">
+      <h3>Support STRETCHPIC</h3>
+      <p>Free & open source — donations keep it alive</p>
+    </div>
+    <div class="donate-grid">
+      <div class="donate-row" onclick="copyAddr('btc')">
+        <div class="donate-icon btc">BTC</div>
+        <div class="donate-info">
+          <div class="chain">Bitcoin</div>
+          <div class="addr" id="addr-btc">bc1qs6al7mcvyaejz8knfgg5gc90nr7eumknm26x7x</div>
+        </div>
+        <button class="copy-btn" id="copy-btc" onclick="event.stopPropagation();copyAddr('btc')">Copy</button>
+      </div>
+      <div class="donate-row" onclick="copyAddr('eth')">
+        <div class="donate-icon eth">ETH</div>
+        <div class="donate-info">
+          <div class="chain">Ethereum</div>
+          <div class="addr" id="addr-eth">0xc24a66C4428E8d4a6b6A771bf170EBA86c6f3Cc</div>
+        </div>
+        <button class="copy-btn" id="copy-eth" onclick="event.stopPropagation();copyAddr('eth')">Copy</button>
+      </div>
+      <div class="donate-row" onclick="copyAddr('sol')">
+        <div class="donate-icon sol">SOL</div>
+        <div class="donate-info">
+          <div class="chain">Solana</div>
+          <div class="addr" id="addr-sol">4vyomkhcqdp66vzbq8gHcc3mPiRW2Mm8uFT7NVq88EH4</div>
+        </div>
+        <button class="copy-btn" id="copy-sol" onclick="event.stopPropagation();copyAddr('sol')">Copy</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
-    100% in your browser — nothing uploaded, nothing stored
+    <div class="footer-links">
+      <a href="https://x.com/revengerlabs" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @revengerlabs
+      </a>
+      <a href="https://github.com/revengerrr" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="footer-note">100% in your browser — nothing uploaded, nothing stored</div>
   </footer>
 </div>
 
@@ -380,7 +487,6 @@ function processImage(img) {
       canvas.width = targetW;
       canvas.height = targetH;
       const ctx = canvas.getContext('2d');
-      // Stretch / distort — full image mapped to new dimensions
       ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, targetW, targetH);
 
       const quality = format === 'image/jpeg' ? 0.92 : undefined;
@@ -407,6 +513,18 @@ btnDownload.addEventListener('click', () => {
   URL.revokeObjectURL(a.href);
   showToast('Downloaded!');
 });
+
+// Copy donation address
+function copyAddr(chain) {
+  const addr = document.getElementById(`addr-${chain}`).textContent;
+  const btn = document.getElementById(`copy-${chain}`);
+  navigator.clipboard.writeText(addr).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    showToast('Address copied!');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
